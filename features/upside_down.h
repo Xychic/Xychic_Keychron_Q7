@@ -15,7 +15,6 @@
 
 #pragma once
 
-#define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
-#define UNICODE_KEY_LNX LCTL(LSFT(KC_U))
-#define UNICODE_KEY_WINC KC_RIGHT_ALT
-#define UNICODE_SELECTED_MODES UNICODE_MODE_WINCOMPOSE, UNICODE_MODE_LINUX, UNICODE_MODE_MACOS
+#include "quantum.h"
+
+bool process_upside_down(uint16_t keycode, keyrecord_t* record);
