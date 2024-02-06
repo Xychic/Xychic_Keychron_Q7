@@ -2,16 +2,12 @@
 
 ## Instructions
 
-- Install [qmk_toolbox](https://github.com/qmk/qmk_toolbox)
 - Install [QMK_MSYS](https://github.com/qmk/qmk_distro_msys)
 - Run `qmk setup` in QMK_MSYS
 - Clone this repo into `qmk_firmware/keyboards/keychron/q7/iso/keymaps`
 - Set keyboard: `qmk config user.keyboard=keychron/q7/iso`
 - Set keymap: `qmk config user.keymap=Xychic_keychron_Q7`
-- Compile the keymap: `qmk compile`
-- Open the compiled firmware in qmk_toolbox
-- Place the keyboard in bootloader mode
-- Flash the keyboard
+- Compile the config and flash the keyboard: `qmk flash`, placing the keyboard in bootloader mode when required
 
 ## Resources
 

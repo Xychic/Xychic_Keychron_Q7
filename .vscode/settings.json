@@ -1,0 +1,9 @@
+{
+    "terminal.integrated.profiles.windows": {
+        "QMK MSYS": {
+          "source": "PowerShell",
+          "args": ["-Command", "C:/QMK_MSYS/shell_connector.cmd"]
+        }
+    },
+    "terminal.integrated.defaultProfile.windows": "QMK MSYS"
+}
