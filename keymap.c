@@ -15,6 +15,8 @@
  */
 
 #include QMK_KEYBOARD_H
+#include "os_detection.h"
+#include "features/upside_down.h"
 
 // Mouse key speed and acceleration.
 #undef MOUSEKEY_DELAY
@@ -42,7 +44,8 @@ enum layers{
 #define KC_FLXP LGUI(KC_E)
 
 enum custom_keycodes {
-  M1 = SAFE_RANGE,
+    M1 = SAFE_RANGE,
+    UD_TEXT,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -78,15 +81,40 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_GRV,  M1,       _______,  _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______,  _______,           _______, TG(_L4),
         _______, KC_BTN1,  KC_MS_U,  KC_BTN2, _______, _______, _______, _______, _______, _______, _______,  _______, _______,                     _______, _______,
         _______, KC_MS_L,  KC_MS_D,  KC_MS_R, _______, _______, _______, _______, _______, _______, _______,  _______, _______,  _______,           _______, _______,
-        _______, _______,  _______,  _______, _______, _______, _______, _______, _______, _______, _______,  _______,           _______,           KC_WH_U, _______,
+        UD_TEXT, _______,  _______,  _______, _______, _______, _______, _______, _______, _______, _______,  _______,           _______,           KC_WH_U, _______,
         _______, _______,  _______,                             KC_P4,                              _______,  _______, _______,  _______,  KC_WH_L, KC_WH_D, KC_WH_R),
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
+    static bool upside_down_text = false;
+
+    if (upside_down_text && !process_upside_down(keycode, record)) { return false; }
+
     switch (keycode) {
         case M1: {
             if (record->event.pressed) {
-                SEND_STRING("Hello from macro 1!");
+                switch (detected_host_os()) {
+                    case OS_LINUX:
+                        SEND_STRING("LINUX");
+                        return false;
+                    case OS_WINDOWS:
+                        SEND_STRING("WINDOWS");
+                        return false;
+                    case OS_MACOS:
+                        SEND_STRING("MACOS");
+                        return false;
+                    case OS_IOS:
+                        SEND_STRING("IOS");
+                        return false;
+                    case OS_UNSURE:
+                        SEND_STRING("UNSURE");
+                        return false;
+                }
+            }
+        }
+        case UD_TEXT: {
+            if (record->event.pressed) {
+                upside_down_text = !upside_down_text;
             }
             return false;
         }
