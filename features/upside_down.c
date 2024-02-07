@@ -16,7 +16,7 @@
 #include "upside_down.h"
 #include "os_detection.h"
 
-#define shift(a, b) ((mods | oneshot_mods) & MOD_MASK_SHIFT) ? b : a
+#define shift(a, b) (((mods | oneshot_mods) & MOD_MASK_SHIFT) ? b : a)
 #define handle_key(key, result) case key:{send_unicode_string(result);del_oneshot_mods(MOD_MASK_SHIFT);unregister_mods(MOD_MASK_SHIFT); tap_code(KC_LEFT);register_mods(mods);return false;}
 
 

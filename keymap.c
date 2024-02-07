@@ -17,6 +17,7 @@
 #include QMK_KEYBOARD_H
 #include "os_detection.h"
 #include "features/upside_down.h"
+#include "features/git_shorthand.h"
 
 // Mouse key speed and acceleration.
 #undef MOUSEKEY_DELAY
@@ -46,6 +47,7 @@ enum layers{
 enum custom_keycodes {
     M1 = SAFE_RANGE,
     UD_TEXT,
+    GIT_SH,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -82,13 +84,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, KC_BTN1,  KC_MS_U,  KC_BTN2, _______, _______, _______, _______, _______, _______, _______,  _______, _______,                     _______, _______,
         _______, KC_MS_L,  KC_MS_D,  KC_MS_R, _______, _______, _______, _______, _______, _______, _______,  _______, _______,  _______,           _______, _______,
         UD_TEXT, _______,  _______,  _______, _______, _______, _______, _______, _______, _______, _______,  _______,           _______,           KC_WH_U, _______,
-        _______, AC_TOGG,  _______,                             KC_P4,                              _______,  _______, _______,  _______,  KC_WH_L, KC_WH_D, KC_WH_R),
+        _______, AC_TOGG,  GIT_SH,                              KC_P4,                              _______,  _______, _______,  _______,  KC_WH_L, KC_WH_D, KC_WH_R),
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     static bool upside_down_text = false;
+    static bool git_shorthand = false;
 
     if (upside_down_text && !process_upside_down(keycode, record)) { return false; }
+    if (git_shorthand && !process_git_shorthand(keycode, record)) { return false; }
 
     switch (keycode) {
         case M1: {
@@ -115,6 +119,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
         case UD_TEXT: {
             if (record->event.pressed) {
                 upside_down_text = !upside_down_text;
+            }
+            return false;
+        }
+        case GIT_SH: {
+            if (record->event.pressed) {
+                git_shorthand = !git_shorthand;
             }
             return false;
         }
