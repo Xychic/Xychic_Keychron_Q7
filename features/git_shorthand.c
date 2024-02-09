@@ -60,8 +60,10 @@ static replacements_t lookuptable[] = {
     {"gwch", "git whatchanged -p --abbrev-commit --pretty=medium"},
 };
 
+#define USB_LED_CAPS_LOCK 1
+#define CAPS ((host_keyboard_leds() & (1<<USB_LED_CAPS_LOCK)))
 #define N_REPLACEMENTS (sizeof(lookuptable)/sizeof(replacements_t))
-#define shift(a, b) (((mods | oneshot_mods) & MOD_MASK_SHIFT) ? b : a)
+#define shift(a, b) ((((mods | oneshot_mods) & MOD_MASK_SHIFT) ^ CAPS) ? b : a)
 #define MAX_REPLACEMENT_SIZE 7
 
 bool process_git_shorthand(uint16_t keycode, keyrecord_t* record) {
@@ -107,8 +109,11 @@ bool process_git_shorthand(uint16_t keycode, keyrecord_t* record) {
                     }
                     del_oneshot_mods(MOD_MASK_SHIFT);
                     unregister_mods(MOD_MASK_SHIFT); 
+                    bool caps_enabled = CAPS;
+                    if (caps_enabled) { tap_code(KC_CAPS); }
                     send_string(replacement->result);
                     register_mods(mods);
+                    if (caps_enabled) { tap_code(KC_CAPS); }
                     break;
                 }
             }
