@@ -128,8 +128,8 @@ bool process_git_shorthand(uint16_t keycode, keyrecord_t* record) {
     }
 
     if (replacement_buffer_size >= MAX_REPLACEMENT_SIZE) {
-        memset(replacement_string, 0, MAX_REPLACEMENT_SIZE);
-        replacement_buffer_size = 0;
+        memmove(replacement_string, replacement_string+1, MAX_REPLACEMENT_SIZE-1);
+        replacement_buffer_size = MAX_REPLACEMENT_SIZE-1;
     }
 
     return true;
