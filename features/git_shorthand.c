@@ -95,7 +95,8 @@ bool process_git_shorthand(uint16_t keycode, keyrecord_t* record) {
         case QK_ONE_SHOT_LAYER ... QK_ONE_SHOT_LAYER_MAX:
         case QK_LAYER_TAP_TOGGLE ... QK_LAYER_TAP_TOGGLE_MAX:
         case QK_LAYER_MOD ... QK_LAYER_MOD_MAX:
-        return true;  // Ignore these keys.
+            return true;  // Ignore these keys.
+
         case KC_SPC:
         case KC_ENT: {
             for (int i=0; i<N_REPLACEMENTS; i++) {
@@ -123,6 +124,12 @@ bool process_git_shorthand(uint16_t keycode, keyrecord_t* record) {
         }
         case KC_A ... KC_Z: {
             replacement_string[replacement_buffer_size++] = shift('a', 'A') + (keycode - KC_A);
+            break;
+        }
+        case KC_1 ... KC_0:
+        case KC_MINUS ... KC_SLASH:
+        {
+            replacement_string[replacement_buffer_size++] = '_';
             break;
         }
     }
