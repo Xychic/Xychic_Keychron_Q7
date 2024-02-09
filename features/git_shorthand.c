@@ -104,7 +104,10 @@ bool process_git_shorthand(uint16_t keycode, keyrecord_t* record) {
                     for (uint8_t j=0; j<replacement_buffer_size; j++) {
                         tap_code(KC_BSPC);
                     }
+                    del_oneshot_mods(MOD_MASK_SHIFT);
+                    unregister_mods(MOD_MASK_SHIFT); 
                     send_string(replacement->result);
+                    register_mods(mods);
                     break;
                 }
             }
