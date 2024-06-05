@@ -5,5 +5,8 @@
           "args": ["-Command", "C:/QMK_MSYS/shell_connector.cmd"]
         }
     },
-    "terminal.integrated.defaultProfile.windows": "QMK MSYS"
+    "terminal.integrated.defaultProfile.windows": "QMK MSYS",
+    "code-runner.executorMapByGlob": {
+      "*": "cd $workspaceRoot && qmk flash -kb keychron/q7/iso -km Xychic_Keychron_Q7",
+  }
 }

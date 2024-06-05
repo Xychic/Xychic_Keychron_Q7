@@ -13,6 +13,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+// Based on oh-my-zsh's git plugin <https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git>
+
 #include "git_shorthand.h"
 
 typedef struct { char* key; char* result; } replacements_t;
