@@ -19,17 +19,26 @@
 #include "features/upside_down.h"
 #include "features/git_shorthand.h"
 
-// Mouse key speed and acceleration.
 #undef MOUSEKEY_DELAY
-#define MOUSEKEY_DELAY 0
+#define MOUSEKEY_DELAY 10
 #undef MOUSEKEY_INTERVAL
-#define MOUSEKEY_INTERVAL 16
-#undef MOUSEKEY_WHEEL_DELAY
-#define MOUSEKEY_WHEEL_DELAY 0
+#define MOUSEKEY_INTERVAL 20
+#undef MOUSEKEY_MOVE_DELTA
+#define MOUSEKEY_MOVE_DELTA 8
 #undef MOUSEKEY_MAX_SPEED
-#define MOUSEKEY_MAX_SPEED 6
+#define MOUSEKEY_MAX_SPEED 10
 #undef MOUSEKEY_TIME_TO_MAX
 #define MOUSEKEY_TIME_TO_MAX 120
+#undef MOUSEKEY_WHEEL_DELAY
+#define MOUSEKEY_WHEEL_DELAY 10
+#undef MOUSEKEY_WHEEL_INTERVAL
+#define MOUSEKEY_WHEEL_INTERVAL 80
+#undef MOUSEKEY_WHEEL_DELTA
+#define MOUSEKEY_WHEEL_DELTA 1
+#undef MOUSEKEY_WHEEL_MAX_SPEED
+#define MOUSEKEY_WHEEL_MAX_SPEED 8
+#undef MOUSEKEY_WHEEL_TIME_TO_MAX
+#define MOUSEKEY_WHEEL_TIME_TO_MAX 40
 
 // clang-format off
 
@@ -48,6 +57,16 @@ enum custom_keycodes {
     M1 = SAFE_RANGE,
     UD_TEXT,
     GIT_SH,
+    RGB_MOD,
+    RGB_TOG,
+    RGB_VAI,
+    RGB_VAD,
+    RGB_SPI,
+    RGB_SPD,
+    RGB_HUI,
+    RGB_HUD,
+    RGB_SAI,
+    RGB_SAD,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -81,10 +100,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_L4] = LAYOUT_iso_73(
         KC_GRV,  M1,       _______,  _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______,  _______,           _______, TG(_L4),
-        _______, KC_BTN1,  KC_MS_U,  KC_BTN2, _______, _______, _______, _______, _______, _______, _______,  _______, _______,                     _______, _______,
-        _______, KC_MS_L,  KC_MS_D,  KC_MS_R, _______, _______, _______, _______, _______, _______, _______,  _______, _______,  _______,           _______, _______,
-        UD_TEXT, _______,  _______,  _______, _______, _______, _______, _______, _______, _______, _______,  _______,           _______,           KC_WH_U, _______,
-        _______, AC_TOGG,  GIT_SH,                              KC_P4,                              _______,  _______, _______,  _______,  KC_WH_L, KC_WH_D, KC_WH_R),
+        _______, MS_BTN1,  MS_UP,    MS_BTN2, _______, _______, _______, _______, _______, _______, _______,  _______, _______,                     _______, _______,
+        _______, MS_LEFT,  MS_DOWN,  MS_RGHT, _______, _______, _______, _______, _______, _______, _______,  _______, _______,  _______,           _______, _______,
+        UD_TEXT, _______,  _______,  _______, _______, _______, _______, _______, _______, _______, _______,  _______,           _______,           MS_WHLU, _______,
+        _______, AC_TOGG,  GIT_SH,                              KC_P4,                              _______,  _______, _______,  _______,  MS_WHLL, MS_WHLD, MS_WHLR),
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
@@ -125,6 +144,66 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
         case GIT_SH: {
             if (record->event.pressed) {
                 git_shorthand = !git_shorthand;
+            }
+            return false;
+        }
+        case RGB_MOD: {
+            if (record->event.pressed) {
+                rgblight_step();
+            }
+            return false;
+        }
+        case RGB_TOG: {
+            if (record->event.pressed) {
+                rgblight_toggle();
+            }
+            return false;
+        }
+                case RGB_VAI: {
+            if (record->event.pressed) {
+                rgblight_increase_val();
+            }
+            return false;
+        }
+        case RGB_VAD: {
+            if (record->event.pressed) {
+                rgblight_decrease_val();
+            }
+            return false;
+        }
+        case RGB_SPI: {
+            if (record->event.pressed) {
+                rgblight_increase_speed();
+            }
+            return false;
+        }
+        case RGB_SPD: {
+            if (record->event.pressed) {
+                rgblight_decrease_speed();
+            }
+            return false;
+        }
+        case RGB_HUI: {
+            if (record->event.pressed) {
+                rgblight_increase_hue();
+            }
+            return false;
+        }
+        case RGB_HUD: {
+            if (record->event.pressed) {
+                rgblight_decrease_hue();
+            }
+            return false;
+        }
+        case RGB_SAI: {
+            if (record->event.pressed) {
+                rgblight_increase_sat();
+            }
+            return false;
+        }
+        case RGB_SAD: {
+            if (record->event.pressed) {
+                rgblight_decrease_sat();
             }
             return false;
         }
