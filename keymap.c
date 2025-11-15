@@ -20,6 +20,7 @@
 #include "features/upside_down.h"
 #include "features/git_shorthand.h"
 #include "features/rgb_control.h"
+#include "features/autoclicker.h"
 
 #undef MOUSEKEY_DELAY
 #define MOUSEKEY_DELAY 10
@@ -86,8 +87,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_L4] = LAYOUT_iso_73(
         KC_GRV,  M1,       _______,  _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______,  _______,           _______, TG(_L4),
-        _______, MS_BTN1,  MS_UP,    MS_BTN2, _______, _______, _______, _______, _______, _______, _______,  _______, _______,                     _______, _______,
-        AUT_CLK, MS_LEFT,  MS_DOWN,  MS_RGHT, _______, _______, _______, _______, _______, _______, _______,  _______, _______,  _______,           _______, _______,
+        _______, MS_BTN1,  MS_UP,    MS_BTN2, ACL_INC, _______, _______, _______, _______, _______, _______,  _______, _______,                     _______, _______,
+        AUT_CLK, MS_LEFT,  MS_DOWN,  MS_RGHT, ACL_DEC, _______, _______, _______, _______, _______, _______,  _______, _______,  _______,           _______, _______,
         UD_TEXT, _______,  _______,  _______, _______, _______, _______, _______, _______, _______, _______,  _______,           _______,           MS_WHLU, _______,
         _______, AC_TOGG,  GIT_SH,                              KC_P4,                              _______,  _______, _______,  _______,  MS_WHLL, MS_WHLD, MS_WHLR),
 };
@@ -98,6 +99,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     if (!process_upside_down(keycode, record)) { return false; }
     if (!process_git_shorthand(keycode, record)) { return false; }
     if (!process_rgb(keycode, record)) { return false; }
+    if (!process_autoclicker(keycode, record)) { return false; }
 
     switch (keycode) {
         case M1: {

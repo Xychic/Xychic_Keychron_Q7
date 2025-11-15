@@ -5,7 +5,9 @@ AUTOCORRECT_ENABLE = yes
 LTO_ENABLE = yes
 RGB_MATRIX_ENABLE = yes
 MOUSE_KEYS_ENABLE = yes
+DEFERRED_EXEC_ENABLE = yes
 
 SRC += features/upside_down.c
 SRC += features/git_shorthand.c
 SRC += features/rgb_control.c
+SRC += features/autoclicker.c

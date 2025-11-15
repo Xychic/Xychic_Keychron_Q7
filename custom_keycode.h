@@ -18,4 +18,6 @@ enum custom_keycodes {
     RGB_SAD,
     RGB_SAV,
     AUT_CLK,
+    ACL_INC,
+    ACL_DEC,
 };

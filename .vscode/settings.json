@@ -12,6 +12,7 @@
 "files.associations": {
     "git_shorthand.h": "c",
     "rgb_control.h": "c",
-    "custom_keycode.h": "c"
+    "custom_keycode.h": "c",
+    "autoclicker.h": "c"
 }
 }
