@@ -17,6 +17,7 @@
 // Based on oh-my-zsh's git plugin <https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git>
 
 #include "git_shorthand.h"
+#include "custom_keycode.h"
 
 typedef struct { char* key; char* result; } replacements_t;
 static replacements_t lookuptable[] = {
@@ -70,15 +71,22 @@ static replacements_t lookuptable[] = {
 #define MAX_REPLACEMENT_SIZE 7
 
 bool process_git_shorthand(uint16_t keycode, keyrecord_t* record) {
+    static bool git_shorthand = false;
     static char replacement_string[MAX_REPLACEMENT_SIZE] = "\0";
     static uint8_t replacement_buffer_size = 0;
-    const uint8_t mods = get_mods();
-    const uint8_t oneshot_mods = get_oneshot_mods();
 
     // Ignore key release; we only process key presses.
     if (!record->event.pressed) {
         return true;
+    } else if (keycode == GIT_SH) {
+        git_shorthand = !git_shorthand;
+        return false;
+    } else if (!git_shorthand) {
+        return true;
     }
+
+    const uint8_t mods = get_mods();
+    const uint8_t oneshot_mods = get_oneshot_mods();
     // Disable autocorrection while a mod other than shift is active.
     if (((mods | oneshot_mods) & ~MOD_MASK_SHIFT) != 0) {
         memset(replacement_string, 0, MAX_REPLACEMENT_SIZE);
