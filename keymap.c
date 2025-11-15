@@ -15,9 +15,11 @@
  */
 
 #include QMK_KEYBOARD_H
+#include "custom_keycode.h"
 #include "os_detection.h"
 #include "features/upside_down.h"
 #include "features/git_shorthand.h"
+#include "features/rgb_control.h"
 
 #undef MOUSEKEY_DELAY
 #define MOUSEKEY_DELAY 10
@@ -53,23 +55,6 @@ enum layers{
 #define KC_TASK LGUI(KC_TAB)
 #define KC_FLXP LGUI(KC_E)
 
-enum custom_keycodes {
-    M1 = SAFE_RANGE,
-    UD_TEXT,
-    GIT_SH,
-    RGB_MOD,
-    RGB_TOG,
-    RGB_VAI,
-    RGB_VAD,
-    RGB_SPI,
-    RGB_SPD,
-    RGB_HUI,
-    RGB_HUD,
-    RGB_SAI,
-    RGB_SAD,
-    RGB_SAV,
-};
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_L0] = LAYOUT_iso_73(
         KC_NO,   KC_NO,    KC_NO,    KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,   KC_NO,    KC_NO,             KC_NO,   QK_BOOT,
@@ -102,18 +87,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_L4] = LAYOUT_iso_73(
         KC_GRV,  M1,       _______,  _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______,  _______,           _______, TG(_L4),
         _______, MS_BTN1,  MS_UP,    MS_BTN2, _______, _______, _______, _______, _______, _______, _______,  _______, _______,                     _______, _______,
-        _______, MS_LEFT,  MS_DOWN,  MS_RGHT, _______, _______, _______, _______, _______, _______, _______,  _______, _______,  _______,           _______, _______,
+        AUT_CLK, MS_LEFT,  MS_DOWN,  MS_RGHT, _______, _______, _______, _______, _______, _______, _______,  _______, _______,  _______,           _______, _______,
         UD_TEXT, _______,  _______,  _______, _______, _______, _______, _______, _______, _______, _______,  _______,           _______,           MS_WHLU, _______,
         _______, AC_TOGG,  GIT_SH,                              KC_P4,                              _______,  _______, _______,  _______,  MS_WHLL, MS_WHLD, MS_WHLR),
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
-    static bool upside_down_text = false;
-    static bool git_shorthand = false;
-    static bool write_rgb_to_eeprom = false;
+    static bool auto_click = false;
 
-    if (upside_down_text && !process_upside_down(keycode, record)) { return false; }
-    if (git_shorthand && !process_git_shorthand(keycode, record)) { return false; }
+    if (!process_upside_down(keycode, record)) { return false; }
+    if (!process_git_shorthand(keycode, record)) { return false; }
+    if (!process_rgb(keycode, record)) { return false; }
 
     switch (keycode) {
         case M1: {
@@ -137,123 +121,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
                 }
             }
         }
-        case UD_TEXT: {
+        case AUT_CLK: {
             if (record->event.pressed) {
-                upside_down_text = !upside_down_text;
+                auto_click = !auto_click;
             }
             return false;
         }
-        case GIT_SH: {
-            if (record->event.pressed) {
-                git_shorthand = !git_shorthand;
+        case MS_BTN1: {
+            if (record->event.pressed && auto_click) {
+                SEND_STRING("AUTOCLICK");
+                return false;
             }
-            return false;
-        }
-        case RGB_MOD: {
-            if (record->event.pressed) {
-                if (write_rgb_to_eeprom) {
-                    rgblight_step();
-                } else {
-                    rgblight_step_noeeprom();
-                }
-            }
-            return false;
-        }
-        case RGB_TOG: {
-            if (record->event.pressed) {
-                if (write_rgb_to_eeprom) {
-                    rgblight_toggle();
-                } else {
-                    rgblight_toggle_noeeprom();
-                }
-            }
-            return false;
-        }
-                case RGB_VAI: {
-            if (record->event.pressed) {
-                if (write_rgb_to_eeprom) {
-                    rgblight_increase_val();
-                } else {
-                    rgblight_increase_val_noeeprom();
-                }
-            }
-            return false;
-        }
-        case RGB_VAD: {
-            if (record->event.pressed) {
-                if (write_rgb_to_eeprom) {
-                    rgblight_decrease_val();
-                } else {
-                    rgblight_decrease_val_noeeprom();
-                }
-            }
-            return false;
-        }
-        case RGB_SPI: {
-            if (record->event.pressed) {
-                if (write_rgb_to_eeprom) {
-                    rgblight_increase_speed();
-                } else {
-                    rgblight_increase_speed_noeeprom();
-                }
-            }
-            return false;
-        }
-        case RGB_SPD: {
-            if (record->event.pressed) {
-                if (write_rgb_to_eeprom) {
-                    rgblight_decrease_speed();
-                } else {
-                    rgblight_decrease_speed_noeeprom();
-                }
-            }
-            return false;
-        }
-        case RGB_HUI: {
-            if (record->event.pressed) {
-                if (write_rgb_to_eeprom) {
-                    rgblight_increase_hue();
-                } else {
-                    rgblight_increase_hue_noeeprom();
-                }
-            }
-            return false;
-        }
-        case RGB_HUD: {
-            if (record->event.pressed) {
-                if (write_rgb_to_eeprom) {
-                    rgblight_decrease_hue();
-                } else {
-                    rgblight_decrease_hue_noeeprom();
-                }
-            }
-            return false;
-        }
-        case RGB_SAI: {
-            if (record->event.pressed) {
-                if (write_rgb_to_eeprom) {
-                    rgblight_increase_sat();
-                } else {
-                    rgblight_increase_sat_noeeprom();
-                }
-            }
-            return false;
-        }
-        case RGB_SAD: {
-            if (record->event.pressed) {
-                if (write_rgb_to_eeprom) {
-                    rgblight_decrease_sat();
-                } else {
-                    rgblight_decrease_sat_noeeprom();
-                }
-            }
-            return false;
-        }
-        case RGB_SAV: {
-            if (record->event.pressed) {
-                write_rgb_to_eeprom = !write_rgb_to_eeprom;
-            }
-            return false;
+            return true;
         }
     }
     return true;

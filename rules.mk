@@ -8,3 +8,4 @@ MOUSE_KEYS_ENABLE = yes
 
 SRC += features/upside_down.c
 SRC += features/git_shorthand.c
+SRC += features/rgb_control.c

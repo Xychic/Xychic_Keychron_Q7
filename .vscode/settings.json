@@ -8,5 +8,10 @@
     "terminal.integrated.defaultProfile.windows": "QMK MSYS",
     "code-runner.executorMapByGlob": {
       "*": "cd $workspaceRoot && qmk flash -kb keychron/q7/iso -km Xychic_Keychron_Q7",
-  }
+},
+"files.associations": {
+    "git_shorthand.h": "c",
+    "rgb_control.h": "c",
+    "custom_keycode.h": "c"
+}
 }
